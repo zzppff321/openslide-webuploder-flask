@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>爬虫配置</title>
+<link href="/script/ui1008.css" rel="stylesheet" type="text/css" />
+<script  type="text/javascript" src="/script/jquery.min.js"></script>
+<script type="text/javascript" src="/script/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+            $("#close").on("click",function () {
+                parent.layer.close(index);
+            })
+            $("#submit").on("click",function () {
+                var url = $("#url").val();
+                var param = $("#param").val();
+                 parent.$('#url_{{id}}').val(url);
+                 parent.$('#param_{{id}}').val(param);
+                 parent.layer.close(index);
+            })
+
+
+        })
+    </script>
+</head>
+<body style="margin: 10px">
+<fom>
+    <table  class="table" cellspacing="1" cellpadding="0" width="100%">
+        <tr>
+            <td style="width: 80px;text-align: right">URL:</td>
+            <td>
+                <input type="text" style="width: 380px" name="url" id="url" value="{{url}}">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right">参数:</td>
+            <td>
+                <input type="text" style="width: 380px" name="param" id="param" value="{{param}}">
+            </td>
+        </tr>
+         <tr>
+            <td colspan="2" style="text-align: center">
+                <button id="submit">确定</button>
+                <button id="close">关闭</button>
+            </td>
+        </tr>
+    </table>
+</fom>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">数据源管理</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  标题包含
+  <input name="tel" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.tel }}" size="16">
+  &nbsp;的数据源
+     <select name="is_settime">
+    <option value="all">全部任务</option>
+    <option value="1">定时任务</option>
+    <option value="0">即时任务</option>
+    </select>
+{% endblock -%}
+{% block BODY_OPERA -%}
+    <option value="{/----}add">新建数据源</option>
+    <input onclick="deleteAll()" value="批量删除" type="button"/>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="5%" align="center">全选<input type="checkbox" onclick="checkAll()" id="Checkbox1"></th>
+      <th width="5%" align="center">视频标题</th>
+      <th width="5%" align="center">封面</th>
+      <th width="5%" align="center">媒体号</th>
+      <th width="5%" align="center">发布时间</th>
+      <th width="5%" align="center">定时任务</th>
+      <th width="5%" align="center">创建时间</th>
+        <th width="5%" align="center">操作</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="11" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><input type="checkbox" name="c1" value="{{ q.oid }}"></td>
+      <td align="center">{{ q.title }}</td>
+      <td align="center"><img width="30" height="30" src="/{{q.pic_path}}"></td>
+      <td align="center">
+          {% for i in q.nickname %}
+              {{ i }}<br>
+              {% endfor %}
+      </td>
+      <td align="center">{{q.settime}}</td>
+      <td align="center">
+          {% if  q.is_settime  == '1' %}
+          是
+          {% else %}
+          否
+          {% endif %}
+      </td>
+      <td align="center">{{ q.addtime|dateformat('%Y-%m-%d %H:%M:%S') }}</td>
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <!--
+          <option value="{/----}edit?id={{ q.oid }}">详情</option>
+          -->
+        <option value="{/----}delete?id={{ q.oid }}">删除</option>
+        </select>
+	  </td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="11" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+    <script>
+var checkAll = function ()
+
+ {
+//根据名字获取所有checkbox控件
+    var allCheckBoxs = document.getElementsByName("c1");
+
+//半段点击了全选
+    if (document.getElementById("Checkbox1").checked == true) {
+
+//循环让所有全选
+        for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox") {
+                allCheckBoxs[i].checked = true;
+            }
+        }
+    }
+//点击了取消全选
+    else {
+//循环取消全选
+        for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox") {
+                allCheckBoxs[i].checked = false;
+            }
+        }
+    }
+}
+
+var deleteAll = function ()
+{
+    var ids=[];
+    var allCheckBoxs = document.getElementsByName("c1");
+    for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox"&&allCheckBoxs[i].checked == true) {
+                ids.push(allCheckBoxs[i].value)
+            }
+        }
+    if(ids.length > 0){
+        var idsStr=ids.join(',')
+        window.location.href='source/delete?id='+idsStr;
+    }
+}
+</script>
+{% endblock -%}

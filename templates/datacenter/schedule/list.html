@@ -1,0 +1,83 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+    .preview{
+        width:150px;
+        height:30px;
+        display:block;
+        background-repeat:no-repeat;
+        background-size:cover;
+        border:solid 1px #000;
+    }
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">任务管理</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+任务名称包含&nbsp;
+<input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" size="16">
+&nbsp;的任务
+{% endblock -%}
+{% block BODY_OPERA -%}
+<option value="{/----}edit">新任务</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+<table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+        <th width="8%" align="center">任务名称</th>
+        <th width="8%" align="center">任务运行次数</th>
+        <th width="8%" align="center">数据源类型</th>
+        <th width="6%" align="center">执行方式</th>
+        <th width="8%" align="center">执行状态</th>
+        <th width="8%" align="center">最近进行时间</th>
+        <th width="8%" align="center">操作</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+        <td colspan="11" align="center">无数据</td>
+    </tr>
+    {% else -%}
+    {% for q in query.data -%}
+    <tr height="20">
+        <td align="center">{{ q.name }}</td>
+        <td align="center">{{ q.nums }}</td>
+        <td align="center">
+            {%if q.source_type ==　'api' %}API{% endif %}
+            {%if q.source_type ==　'mysql' %}MySQL{% endif %}
+            {%if q.source_type ==　'oracle' %}ORACLE{% endif %}
+            {%if q.source_type ==　'excel' %}EXCEL文件{% endif %}
+            {%if q.source_type ==　'spider' %}爬虫{% endif %}
+        </td>
+        <td align="center">
+            {%if q.run_type ==　0 %}-{% endif %}
+            {%if q.run_type ==　1 %}手动{% endif %}
+            {%if q.run_type ==　2 %}自动{% endif %}
+        </td>
+        <td align="center">
+            {%if q.last_status==0%}未执行{%endif%}
+            {%if q.last_status==1%}<div style="color: green">执行中</div>{%endif%}
+            {%if q.last_status==2%}<div style="color: blue">完成</div>{%endif%}
+            {%if q.last_status==-1%}<div style="color: red">异常</div>{%endif%}
+        </td>
+        <td align="center">{{q.last_runtime|dateformat('%Y-%m-%d %H:%M:%S')}}</td>
+        <td align="center">
+            {% if q.last_status !=1 %}
+            {%if q.run_type ==1 %}
+             {%if q.source_type !=　'excel' %}
+                {% if q.last_status ==0 %}
+                    <a href="/datacenter/schedule/run?id={{q.id}}">执行</a>
+                {%else%}
+                    <a href="/datacenter/schedule/run?id={{q.id}}">再次执行</a>
+                {%endif%}
+              {%endif%}
+            {%endif%}
+            <a href="/datacenter/schedule/edit?id={{q.id}}">修改</a>
+            <a href="/datacenter/schedule/delete?id={{q.id}}">删除</a>
+            {%endif%}
+        </td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+        <td colspan="11" align="center">{{ query.bar|safe }}</td>
+    </tr>
+</table>
+{% endblock -%}

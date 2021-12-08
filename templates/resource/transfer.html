@@ -1,0 +1,48 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+Validata = {
+	errorElement:"span",
+	errorPlacement:function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success:function(label) {label.text('　').addClass("success");},
+	rules:{
+		appname:{required:true}
+	},
+	messages:{
+		appname:"请选择一个导入来源！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">从旧版本导入资源</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">导入来源 ：</td>
+	<td><span class="x">*</span>
+	  <select name="appname" id="appname">
+		<option value="">请选择一个导入来源</option>
+		<option value="tsp">sp.pangu.mobi</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">数据来源地址 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="dbaddr" size="30" value="" />
+	  <span class="err"></span>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">数据来源集合 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="dbname" size="30" value="" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">目标数据结构 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="dbname" size="30" value="('sn','category','scene','trade','preview','example','qrcode','detail','terminal','shape','style','color','creator','origin','on3d','draw','label')" readonly />
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

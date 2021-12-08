@@ -1,0 +1,98 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_report').upload1(); //文件上传，预览模式
+	var editorElement = CKEDITOR.replace('detail_editor'); //编辑器
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		sn: {required:true},
+		category: {required:true},
+		preview: {required:true},
+		terminal: {required:true},
+		color: {required:true},
+		creator: {required:true}
+	},
+	messages: {
+		sn: 	 "需要为模版设置一个编号！",
+		category:"您没有选择模版的类别！",
+		preview: "您没有上传预览图片！",
+		terminal:"需要至少选择一个支持的终端！",
+		color: 	 "需要至少选择一个作品配色方案！",
+		creator: "您没有注名作品的作者！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">智能框架</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">适用于网站、视频、平面的<span>模版</span>资源发布和编辑</div>
+<div id="helper_play"></div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">编号 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Query.id}}" />
+	  <input type="text" name="sn" value="{{Query.sn}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">类别 ：</td>
+	<td><span class="x">*</span>
+	  <select name="classid" id="classid">
+		<option value="">选择类别...</option>
+		<option value="语音"{{Query.classid |selected("语音")}}>语音智能</option>
+		<option value="图像"{{Query.classid |selected("图像")}}>图像智能</option>
+		<option value="数据"{{Query.classid |selected("数据")}}>数据智能</option>
+		<option value="其他"{{Query.classid |selected("其他")}}>其他智能</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">能力描述 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="brief" value="{{Query.brief}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">集成平台 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="plat" value="百度"{{Query.plat |checked("百度")}} /> 百度
+	  <input type="checkbox" name="plat" value="阿里"{{Query.plat |checked("阿里")}} /> 阿里
+	  <input type="checkbox" name="plat" value="腾讯"{{Query.plat |checked("腾讯")}} /> 腾讯
+	  <input type="checkbox" name="plat" value="华为"{{Query.plat |checked("华为")}} /> 华为
+	  <input type="checkbox" name="plat" value="科大讯飞"{{Query.plat |checked("科大讯飞")}} /> 科大讯飞
+	  <input type="checkbox" name="plat" value="其他"{{Query.plat |checked("其他")}} /> 其他
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">开发环境 ：</td>
+	<td><span class="x"> </span>Python,PHP,Java,C/C++,HTML,其他
+      <input type="checkbox" name="env" value="Python"{{Query.env |checked("Python")}} /> Python
+      <input type="checkbox" name="env" value="PHP"{{Query.env |checked("PHP")}} /> PHP
+      <input type="checkbox" name="env" value="Java"{{Query.env |checked("Java")}} /> Java
+      <input type="checkbox" name="env" value="C/C++"{{Query.env |checked("C/C++")}} /> C/C++
+      <input type="checkbox" name="env" value="HTML"{{Query.env |checked("HTML")}} /> HTML
+      <input type="checkbox" name="env" value="其他"{{Query.env |checked("其他")}} /> 其他
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">开发者 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="creator" value="{{Query.creator}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">标签 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="label" value="{{Query.label}}" /> 多个标签请用逗号分隔（不区分中/英文）
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

@@ -1,0 +1,100 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_preview').upload2(); //文件上传，预览模式
+	$('#load_package').upload1(); //文件上传，预览模式
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		brief:	 {required:true},
+		category:{required:true},
+		scene:	 {required:true},
+		package: {required:true},
+		terminal:{required:true},
+		creator: {required:true}
+	},
+	messages: {
+		brief: 	 "需要为模块设置一个名称！",
+		category:"您没有选择模块的类别！",
+		scene:	 "您没有选择模块的语言环境！",
+		package: "您没有上传资源的源码包！",
+		terminal:"您没有选择模块的适用终端！",
+		creator: "您没有注名开发者！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">模块资源</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑（发布）资源</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">可二次利用的模块、插件、组件等<span>模块</span>程序资源发布和编辑</div>
+<div id="helper_play"></div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">名称/简称 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Resource.id}}" />
+	  <input type="text" name="brief" value="{{Resource.brief}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">类别 ：</td>
+	<td><span class="x">*</span>
+	  <select name="category" id="category">
+		<option value="">选择类别...</option>
+		<option value="组件插件"{{Resource.category |selected("组件插件")}}>组件插件</option>
+		<option value="复用模块"{{Resource.category |selected("复用模块")}}>复用模块</option>
+		<option value="代码片段"{{Resource.category |selected("其他语言")}}>代码片段</option>
+		<option value="其他"{{Resource.category |selected("其他")}}>其　　他</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">语言环境 ：</td>
+	<td><span class="x">*</span>                           
+	  <input type="checkbox" name="scene" value="Python"{{Resource.scene |checked("Python")}} /> Python
+	  <input type="checkbox" name="scene" value="PHP"{{Resource.scene |checked("PHP")}} /> PHP
+	  <input type="checkbox" name="scene" value="GCC"{{Resource.scene |checked("GCC")}} /> GCC
+	  <input type="checkbox" name="scene" value="JAVA"{{Resource.scene |checked("JAVA")}} /> JAVA
+	  <br>
+	  <input type="checkbox" name="scene" value="uniapp"{{Resource.scene |checked("uniapp")}} /> uniapp
+	  <input type="checkbox" name="scene" value="jQuery"{{Resource.scene |checked("jQuery")}} /> jQuery
+	  <input type="checkbox" name="scene" value="VUE"{{Resource.scene |checked("VUE")}} /> Vue
+	  <input type="checkbox" name="scene" value="其他"{{Resource.scene |checked("其他")}} /> 其他
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">演示地址 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="example" value="{{Resource.example}}" size="50" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">源码包 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="package" value="{{Resource.package}}" size="50" id="load_package" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">适用终端 ：</td>
+	<td><span class="x">*</span>
+	  <input type="checkbox" name="terminal" value="100"{{Resource.terminal |checked(100)}} /> PC
+	  <input type="checkbox" name="terminal" value="200"{{Resource.terminal |checked(200)}} /> 移动
+	  <input type="checkbox" name="terminal" value="201"{{Resource.terminal |checked(201)}} /> 百度小程序
+	  <input type="checkbox" name="terminal" value="202"{{Resource.terminal |checked(202)}} /> 微信小程序
+	  <input type="checkbox" name="terminal" value="999"{{Resource.terminal |checked(999)}} /> 其他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">开发者 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="creator" value="{{Resource.creator}}" />
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

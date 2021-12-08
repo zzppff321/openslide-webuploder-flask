@@ -1,0 +1,218 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_preview').upload2(); //文件上传，预览模式
+	$('#load_package').upload1(); //文件上传，预览模式
+	var editorElement = CKEDITOR.replace('detail_editor'); //编辑器
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		sn: {required:true},
+		category: {required:true},
+		preview: {required:true},
+		terminal: {required:true},
+		color: {required:true},
+		creator: {required:true}
+	},
+	messages: {
+		sn: 	 "需要为模版设置一个编号！",
+		category:"您没有选择模版的类别！",
+		preview: "您没有上传预览图片！",
+		terminal:"需要至少选择一个支持的终端！",
+		color: 	 "需要至少选择一个作品配色方案！",
+		creator: "您没有注名作品的作者！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">模版资源</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑（发布）资源</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">适用于网站、视频、平面的<span>模版</span>资源发布和编辑</div>
+<div id="helper_play"></div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">编号 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Resource.id}}" />
+	  <input type="text" name="sn" value="{{Resource.sn}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">类别 ：</td>
+	<td><span class="x">*</span>
+	  <select name="category" id="category">
+		<option value="">选择类别...</option>
+		<optgroup label="模版">
+		  <option value="网站"{{Resource.category |selected("网站")}}>网站</option>
+		  <option value="平面"{{Resource.category |selected("平面")}}>平面</option>
+		  <option value="视频"{{Resource.category |selected("视频")}}>视频</option>
+		  <option value="其他"{{Resource.category |selected("其他")}}>其他</option>
+		</optgroup>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">适用场景 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="scene" value="信息流"{{Resource.scene |checked("信息流")}} /> 信息流　
+	  <input type="checkbox" name="scene" value="落地页"{{Resource.scene |checked("落地页")}} /> 落地页　
+	  <input type="checkbox" name="scene" value="小视频"{{Resource.scene |checked("小视频")}} /> 小视频　
+	  <input type="checkbox" name="scene" value="朋友圈"{{Resource.scene |checked("朋友圈")}} /> 朋友圈　
+	  <br>                               
+	  <input type="checkbox" name="scene" value="线下展示"{{Resource.scene |checked("线下展示")}} /> 线下展示
+	  <input type="checkbox" name="scene" value="电商平台"{{Resource.scene |checked("电商平台")}} /> 电商平台
+	  <input type="checkbox" name="scene" value="视频网站"{{Resource.scene |checked("视频网站")}} /> 视频网站
+	  <input type="checkbox" name="scene" value="其他"{{Resource.scene |checked("其他")}} /> 其　　他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">适配行业 ：</td>
+	<td><span class="x"> </span>
+      <input type="checkbox" name="trade" value="安全安保"{{Resource.trade |checked("安全安保")}} /> 安全安保
+      <input type="checkbox" name="trade" value="办公文教"{{Resource.trade |checked("办公文教")}} /> 办公文教
+      <input type="checkbox" name="trade" value="旅游住宿"{{Resource.trade |checked("旅游住宿")}} /> 旅游住宿
+      <input type="checkbox" name="trade" value="车辆物流"{{Resource.trade |checked("车辆物流")}} /> 车辆物流
+      <input type="checkbox" name="trade" value="成人用品"{{Resource.trade |checked("成人用品")}} /> 成人用品
+      <input type="checkbox" name="trade" value="出版传媒"{{Resource.trade |checked("出版传媒")}} /> 出版传媒
+      <input type="checkbox" name="trade" value="电脑硬件"{{Resource.trade |checked("电脑硬件")}} /> 电脑硬件
+      <input type="checkbox" name="trade" value="电子电工"{{Resource.trade |checked("电子电工")}} /> 电子电工
+      <input type="checkbox" name="trade" value="房产装修"{{Resource.trade |checked("房产装修")}} /> 房产装修
+      <input type="checkbox" name="trade" value="分类平台"{{Resource.trade |checked("分类平台")}} /> 分类平台
+	  <br>
+      <input type="checkbox" name="trade" value="服装鞋帽"{{Resource.trade |checked("服装鞋帽")}} /> 服装鞋帽
+      <input type="checkbox" name="trade" value="箱包饰品"{{Resource.trade |checked("箱包饰品")}} /> 箱包饰品
+      <input type="checkbox" name="trade" value="化工制品"{{Resource.trade |checked("化工制品")}} /> 化工制品
+      <input type="checkbox" name="trade" value="机械设备"{{Resource.trade |checked("机械设备")}} /> 机械设备
+      <input type="checkbox" name="trade" value="生活用品"{{Resource.trade |checked("生活用品")}} /> 生活用品
+      <input type="checkbox" name="trade" value="家用电器"{{Resource.trade |checked("家用电器")}} /> 家用电器
+      <input type="checkbox" name="trade" value="教育培训"{{Resource.trade |checked("教育培训")}} /> 教育培训
+      <input type="checkbox" name="trade" value="节能环保"{{Resource.trade |checked("节能环保")}} /> 节能环保
+      <input type="checkbox" name="trade" value="金融服务"{{Resource.trade |checked("金融服务")}} /> 金融服务
+      <input type="checkbox" name="trade" value="彩票礼品"{{Resource.trade |checked("彩票礼品")}} /> 彩票礼品
+	  <br><span class="x"> </span>
+      <input type="checkbox" name="trade" value="婚纱摄影"{{Resource.trade |checked("婚纱摄影")}} /> 婚纱摄影
+      <input type="checkbox" name="trade" value="美容化妆"{{Resource.trade |checked("美容化妆")}} /> 美容化妆
+      <input type="checkbox" name="trade" value="母婴护理"{{Resource.trade |checked("母婴护理")}} /> 母婴护理
+      <input type="checkbox" name="trade" value="农林牧渔"{{Resource.trade |checked("农林牧渔")}} /> 农林牧渔
+      <input type="checkbox" name="trade" value="软件系统"{{Resource.trade |checked("软件系统")}} /> 软件系统
+      <input type="checkbox" name="trade" value="商务服务"{{Resource.trade |checked("商务服务")}} /> 商务服务
+      <input type="checkbox" name="trade" value="生活服务"{{Resource.trade |checked("生活服务")}} /> 生活服务
+      <input type="checkbox" name="trade" value="食品保健"{{Resource.trade |checked("食品保健")}} /> 食品保健
+      <input type="checkbox" name="trade" value="手机数码"{{Resource.trade |checked("手机数码")}} /> 手机数码
+      <input type="checkbox" name="trade" value="通讯设备"{{Resource.trade |checked("通讯设备")}} /> 通讯设备
+	  <br>
+      <input type="checkbox" name="trade" value="网络服务"{{Resource.trade |checked("网络服务")}} /> 网络服务
+      <input type="checkbox" name="trade" value="医疗服务"{{Resource.trade |checked("医疗服务")}} /> 医疗服务
+      <input type="checkbox" name="trade" value="游戏娱乐"{{Resource.trade |checked("游戏娱乐")}} /> 游戏娱乐
+      <input type="checkbox" name="trade" value="运动休闲"{{Resource.trade |checked("运动休闲")}} /> 运动休闲
+      <input type="checkbox" name="trade" value="招商加盟"{{Resource.trade |checked("招商加盟")}} /> 招商加盟
+      <input type="checkbox" name="trade" value="社会组织"{{Resource.trade |checked("社会组织")}} /> 社会组织
+      <input type="checkbox" name="trade" value="国际组织"{{Resource.trade |checked("国际组织")}} /> 国际组织
+      <input type="checkbox" name="trade" value="美食餐饮"{{Resource.trade |checked("美食餐饮")}} /> 美食餐饮
+	  <input type="checkbox" name="trade" value="其他"{{Resource.trade |checked("其他")}} /> 其　　他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">预览图片 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="preview" value="{{Resource.preview}}" size="50" id="load_preview" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">演示地址 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="example" value="{{Resource.example}}" size="50" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">源码包 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="package" value="{{Resource.package}}" size="50" id="load_package" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">详细介绍 ：</td>
+	<td><textarea id="detail_editor" name="detail">{{Resource.detail}}</textarea>
+	</td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">支持终端 ：</td>
+	<td><span class="x">*</span>
+	  <input type="checkbox" name="terminal" value="100"{{Resource.terminal |checked(100)}} /> PC
+	  <input type="checkbox" name="terminal" value="200"{{Resource.terminal |checked(200)}} /> 移动
+	  <input type="checkbox" name="terminal" value="201"{{Resource.terminal |checked(201)}} /> 百度小程序
+	  <input type="checkbox" name="terminal" value="202"{{Resource.terminal |checked(202)}} /> 微信小程序
+	  <input type="checkbox" name="terminal" value="999"{{Resource.terminal |checked(999)}} /> 其他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">表现形式 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="shape" value="素材拼接"{{Resource.shape |checked("素材拼接")}} /> 素材拼接
+	  <input type="checkbox" name="shape" value="拍摄剪辑"{{Resource.shape |checked("拍摄剪辑")}} /> 拍摄剪辑
+	  <input type="checkbox" name="shape" value="动画创意"{{Resource.shape |checked("动画创意")}} /> 动画创意
+	  <input type="checkbox" name="shape" value="原生创意"{{Resource.shape |checked("原生创意")}} /> 原生创意
+	  <input type="checkbox" name="shape" value="故事剧情"{{Resource.shape |checked("故事剧情")}} /> 故事剧情
+	  <input type="checkbox" name="shape" value="其他"{{Resource.shape |checked("其他")}} /> 其他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">风格 ：</td>
+	<td><span class="x"> </span>
+	  <select name="style" id="style">
+		<option value="">选择..</option>
+		<option value="传统"{{Resource.style |selected("传统")}}>传统</option>
+		<option value="时尚"{{Resource.style |selected("时尚")}}>时尚</option>
+		<option value="科技"{{Resource.style |selected("科技")}}>科技</option>
+		<option value="商业"{{Resource.style |selected("商业")}}>商业</option>
+		<option value="古典"{{Resource.style |selected("古典")}}>古典</option>
+		<option value="卡通"{{Resource.style |selected("卡通")}}>卡通</option>
+		<option value="休闲"{{Resource.style |selected("休闲")}}>休闲</option>
+		<option value="活泼"{{Resource.style |selected("活泼")}}>活泼</option>
+		<option value="另类"{{Resource.style |selected("另类")}}>另类</option>
+		<option value="其他"{{Resource.style |selected("其他")}}>其他</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">配色方案 ：</td>
+	<td><span class="x">*</span>
+	  <input type="checkbox" name="color" value="赤"{{Resource.color |checked("赤")}} /> 赤
+	  <input type="checkbox" name="color" value="橙"{{Resource.color |checked("橙")}} /> 橙
+	  <input type="checkbox" name="color" value="黄"{{Resource.color |checked("黄")}} /> 黄
+	  <input type="checkbox" name="color" value="绿"{{Resource.color |checked("绿")}} /> 绿
+	  <input type="checkbox" name="color" value="蓝"{{Resource.color |checked("蓝")}} /> 蓝
+	  <input type="checkbox" name="color" value="青"{{Resource.color |checked("青")}} /> 青
+	  <input type="checkbox" name="color" value="紫"{{Resource.color |checked("紫")}} /> 紫
+	  <input type="checkbox" name="color" value="黑"{{Resource.color |checked("黑")}} /> 黑
+	  <input type="checkbox" name="color" value="白"{{Resource.color |checked("白")}} /> 白
+	  <input type="checkbox" name="color" value="灰"{{Resource.color |checked("灰")}} /> 灰
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">作者 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="creator" value="{{Resource.creator}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">其他设置 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="origin" value="1"{{Resource.origin |selected(1," checked")}} /> 原创作品
+	  <input type="checkbox" name="on3d" value="1"{{Resource.on3d |selected(1," checked")}} /> 3D特效
+	  <input type="checkbox" name="draw" value="1"{{Resource.draw |selected(1," checked")}} /> 手绘创作
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>盘古云资源与应用管理</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<style>
+body {
+    font-size: 14px;
+    text-align: center;
+}
+.msg {
+    width: 640px;
+    margin: 0 auto;
+    display: block;
+    border: solid 1px #eee;
+    background: #fdf59a;
+}
+.wraper {
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+</style>
+<script type="text/javascript" src="/script/jquery.min.js"></script>
+<!--[if IE 6]>
+<script type="text/javascript" src="/script/ie/DD_belatedPNG_0.0.8a-min.js"></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/script/ie/html5shiv.js"></script>
+<script type="text/javascript" src="/script/ie/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<input type="hidden" id="TenantId" name="TenantId" value=""/>
+{%- with messages = get_flashed_messages(with_categories=True) -%}
+    {%- if messages -%}
+        {%- for category, message in messages -%}
+<div class="msg">
+    {%- if category == 'success' -%}✔{%- endif -%}
+    &nbsp;&nbsp;{{ message }}
+</div>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endwith -%}
+<div class="wraper"><div id="QRCode"></div></div>
+<script src="//rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"></script>
+<script type="text/javascript">
+$(function () {
+    window.WwLogin({
+        "id": "QRCode",
+        //"appid": "ww8d38e66bdb62bfc5", //盘古
+        //"agentid": "1000023",　//盘古
+         "appid": "wwe6a967e2bfd97adf",//东港
+         "agentid": "1000038",　//东港
+        "redirect_uri": window.location.protocol + '//' + window.location.host + "/entry",
+        "state": "",
+        "href": "",
+    });
+});
+</script>
+</body>
+</html>

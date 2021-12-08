@@ -1,0 +1,62 @@
+{% extends '#list.html' %}
+{% block HERDER_ROUTE -%}工作总台<span class="s7">&gt;&gt;</span><span class="s14b">任务派发</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  <select id="kt" name="kt">
+	<option value="1"{% if so.kt == '1' %} selected{% endif %}>描述</option>
+	<option value="2"{% if so.kt == '2' %} selected{% endif %}>执行人</option>
+  </select>
+  &nbsp;中包含&nbsp;
+  <input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" onBlur="def_jihe.keyword = encodeURI(this.value);" size="16">
+  &nbsp;且&nbsp;
+	<input name="ido" type="checkbox" id="ido" value="1"{% if so.ido == '1' %} checked="checked"{% endif %}/> <label for="ido">只看我的</label>
+  <select id="status" name="status" class="select-auto">
+	<option value="">所有状态</option>
+	<option value="200"{% if so.status == '200' %} selected{% endif %}>正在执行</option>
+	<option value="206"{% if so.status == '206' %} selected{% endif %}>放弃任务</option>
+	<option value="201"{% if so.status == '201' %} selected{% endif %}>执行完毕</option>
+  </select>
+  的任务
+{% endblock -%}
+{% block BODY_OPERA -%}
+	<option value="{/----}edit">派发新任务</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="10%" align="center">操作</th>
+      <th width="10%" align="center">发起人</th>
+      <th width="10%" align="center">发起日期</th>
+      <th width="25%" align="center">需求概述</th>
+      <th width="10%" align="center">执行</th>
+      <th width="13%" align="center">通知</th>
+      <th width="7%" align="center">状态</th>
+      <th width="15%" align="center">ID</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="10" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{/----}edit?id={{ q.id }}">编辑</option>
+					<option value="{/3001}warn?id={{ q.id }}">提醒</option>
+          <option value="{/2099}delete?id={{ q.id }}">删除</option>
+        </select>
+	  </td>
+      <td align="center"><a href="" target="_blank">{{ q.sponsor }}</a></td>
+      <td align="center">{{ q.addtime |dateformat('%Y-%m-%d') }}</td>
+      <td title="{{ q.brief }}">{{ q.title }}</td>
+      <td align="center">{{ q.maker }}</td>
+      <td align="center">{{ q.leader1 }}; {{ q.leader2 }}</td>
+      <td align="center">{{ q.status }}</td>
+      <td align="center">{{ q.id }}</td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="10" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+{% endblock -%}

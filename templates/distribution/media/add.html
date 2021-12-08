@@ -1,0 +1,69 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		gid: {required:true},
+		name: {required:true},
+		passwd: {required:true},
+	},
+	messages: {
+        tel:     "请填写账号（电话号码）！",
+
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">账号</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">账号appid：</td>
+	 <td><span class="x">*</span> <input type="text" name="appid" value="" />
+	  <span class="err"></span></td>
+  </tr>
+<tr height="20">
+		<td width="120" align="right" class="blue">绑定营销号：</td>
+		<td><span class="x">*</span>
+		  <select id="gid" name="gid">
+			  <option value="">请选择营销号</option>
+			  {% for q in gidList %}}
+			  <option value="{{q.oid}}">{{q.tel}}</option>
+			  {% endfor %}}
+		  </select>
+		  <span class="err"></span>
+		</td>
+	</tr>
+	<tr height="20">
+	<td width="120" align="right" class="blue">媒体类型：</td>
+	<td><span class="x"></span>
+	  <input type="radio" name="type" value="1" checked /> 抖音
+	  <input type="radio" name="type" value="2"/> 快手
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20">
+	<td width="120" align="right" class="blue">来源：</td>
+	<td><span class="x"></span>
+	  <input type="radio" name="from_type" value="1" checked />  客户资源
+	  <input type="radio" name="from_type" value="2"/>   平台资源
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20">
+	<td width="120" align="right" class="blue">token：</td>
+	 <td><span class="x">*</span> <input type="text" name="token" value="" />
+	  <span class="err"></span></td>
+  </tr>
+<tr height="20">
+	<td width="120" align="right" class="blue">refrsh_token：</td>
+	 <td><span class="x">*</span> <input type="text" name="refrsh_token" value="" />
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

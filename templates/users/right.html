@@ -1,0 +1,32 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+Validata = {
+	errorElement:"span",
+	errorPlacement:function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success:function(label) {label.text('　').addClass("success");},
+	rules:{remark:{required:true}},
+	messages:{remark:"请确认授权的说明！"}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}系统设置<span class="s7">&gt;&gt;</span>业务账户<span class="s7">&gt;&gt;</span><span class="red s14b">可用权限授权</span><span class="s7">&gt;&gt;</span><span class="s14b">{{ Q.realname }}</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">所有权限 ：</td>
+	<td>{% for R in Rights -%}
+		{% if   not R[0] % 100 > 0 and loop.index > 1 -%}<br>{% if R[0] % 1000 > 0 -%}　　{% endif -%}{% endif -%}
+		<input type="checkbox" name="ri" id="r{{R[0]}}" value="{{R[0]}}"{{Q.rights |checked(R[0])}} />
+		<label for="r{{R[0]}}"{% if not R[0] % 1000 > 0 -%} style="font-weight:bold;"{% endif -%} title="（{{R[0]}}）{{R[1]}}">{{R[1]}}</label>
+		{% if not R[0] % 100  > 0 and R[0] % 1000 > 0 -%}&nbsp;->&nbsp;{% else -%}&nbsp;&nbsp;{% endif -%}
+	{% endfor -%}</td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">确认并说明 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Q.id}}" />
+	  <input type="text" name="remark" size="30" value="" />
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

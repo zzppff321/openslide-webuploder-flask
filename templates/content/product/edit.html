@@ -1,0 +1,85 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_preview').upload2(); //文件上传，预览模式
+	$('#load_package').upload1(); //文件上传，预览模式
+	var editorElement = CKEDITOR.replace('detail_editor'); //编辑器
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		categorid: {required:true},
+		price: {required:true},
+		discount: {required:true}
+	},
+	messages: {
+		categorid:"您没有选择商品的种类！",
+		price: "您没有定义商品的公开售价！",
+		discount:"您没有定义商品的优惠折扣！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}商品管理<span class="s7">&gt;&gt;</span><span class="s14b">编辑（发布）商品</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">适用于网站、视频、平面的<span>模版</span>商品发布和编辑</div>
+<div id="helper_play"></div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">选择模版 ：</td>
+	<td><span class="x"> </span><input type="hidden" name="id" value="{{Q.id}}" />
+	  <input type="text" id="so" onblur="javascript:location.href+='?so='+this.value;" />
+	  {% if Q.resource_id -%}
+	  <div><input type="checkbox" disabled="disabled" checked="checked" /> {{Q.sn}}</div>
+	  {% endif -%}
+	  {% if query -%}<div>
+	  {% for q in query -%}
+	  <input type="checkbox" name="resource_id" value="{{q.id}}" id="{{q.sn}}" /> <label for="{{q.sn}}">{{q.sn}}</label>
+	  {% endfor -%}{% endif -%}</div>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">名称/标题 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="brief" value="{{Q.brief}}" size="30" /> &nbsp; 如已选择模版，请留空，默认与模版编号一致
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">商品种类 ：</td>
+	<td><span class="x">*</span>
+	  <select name="categorid" id="categorid">
+		<option value="">选择...</option>
+		{% for k,v in CATEGORID -%}
+		<option value="{{k}}"{{Q.categorid |selected(k)}}>{{v}}</option>
+		{% endfor -%}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">公开价格 ：</td>
+	<td><span class="x">*</span>
+	  ¥ <input type="text" name="price" value="{{Q.price}}" size="10" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">优惠折扣 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="discount" value="{{Q.discount*10}}" size="5" /> 折
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">其他设置 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="A" value=""{{Q.id |selected(0," checked")}} /> 配置A
+	  <input type="checkbox" name="B" value=""{{Q.id |selected(0," checked")}} /> 配置B
+	  <input type="checkbox" name="C" value=""{{Q.id |selected(0," checked")}} /> 配置C
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

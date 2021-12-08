@@ -1,0 +1,142 @@
+{% include '#meta.html' %}
+<link type="text/css" rel="stylesheet" href="/script/gridmanager/gm.css"/>
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+<script type="text/javascript" src="/script/searchChange.js"></script>
+<script type="text/javascript" src="/script/gridmanager/gm.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    pageInit();
+	$('#search').search('.select-auto');
+	$('tr').hover(
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#f5fbfe"});}},
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#fff"});}}
+	);
+	$("#button").hover(function() {this.className = 'btnover';}, function() {this.className = 'btn';});
+    $('#data_table').GM({
+        gridManagerName: 'tableData',
+        disableCache:false,
+        isIconFollowText:true,
+        supportAjaxPage:true,
+        supportCheckbox: false,
+        supportExport:true,
+        height: '100%-50px',
+        ajax_data: '/datacenter/datapacket/cdpstatindu?id={{ id }}&yy={{ yy }}&ty=1',
+        ajax_type: 'GET',
+        query: {pluginId: 1},
+        pageSize:20,
+        columnData: [
+            {
+                key: 'first_name',
+                remind: 'first_name',
+                text: '一级行业',
+            },
+
+            {
+                key: 'second_name',
+                remind: 'second_name',
+                text: '二级行业',
+            },
+
+            {
+                key: 'trend',
+                remind: 'trend',
+                text: '搜索量',
+            },
+
+        ],
+        //鼠标滑过事件
+        cellHover: function(row, rowIndex, colIndex) {
+            //console.log(row, rowIndex, colIndex);
+        },
+        // 分页前事件
+        pagingBefore: function(query){
+            //console.log('pagingBefore', query);
+        },
+        // 分页后事件
+        pagingAfter: function(data){
+            //console.log('pagingAfter', data);
+        },
+        // 排序前事件
+        sortingBefore: function (data) {
+            //console.log('sortBefore', data);
+        },
+        // 排序后事件
+        sortingAfter: function (data) {
+            //console.log('sortAfter', data);
+        },
+        // 宽度调整前事件
+        adjustBefore: function (event) {
+            //console.log('adjustBefore', event);
+        },
+        // 宽度调整后事件
+        adjustAfter: function (event) {
+            //console.log('adjustAfter', event);
+        },
+        // 拖拽前事件
+        dragBefore: function (event) {
+            //console.log('dragBefore', event);
+        },
+        // 拖拽后事件
+        dragAfter: function (event) {
+            //console.log('dragAfter', event);
+        }
+    });
+    // 日期格式化,不是插件的代码,只用于处理时间格式化
+    Date.prototype.format = function(fmt){
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "D+": this.getDate(), //日
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/([Y,y]+)/.test(fmt)){
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o){
+            if(new RegExp("(" + k + ")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+});
+function trEditFN(){
+    GridManager.updateRowData('tableData', 'account', {id:1002, uname: "更新", mark: "" });
+}
+function trDelFN(){
+    GridManager.refreshGrid('tableData');
+}
+</script>
+
+</head>
+<body>
+  <div class="nei">
+    <div class="path"><img src="/images/ico-home.gif" width="16" height="15" />&nbsp;营销数据<span class="s7">&gt;&gt;</span><span class="s14b">数据管理</span>&gt;&gt;</span><span class="red s14b">观星盘行业总数据</span></div>
+    <br/>
+    <form action="">
+      <select name="yy" id="yy">
+        <option value="2020"{% if yy==2020 %} selected{% endif %}>2020年</option>
+        <option value="2021"{% if yy==2021 %} selected{% endif %}>2021年</option>
+        <option value="2022"{% if yy==2022 %} selected{% endif %}>2022年</option>
+      </select>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="submit" value="搜索">
+    </form>
+    <table id="data_table"></table>
+  </div>
+</body>
+</html>

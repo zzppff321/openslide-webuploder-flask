@@ -1,0 +1,47 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">爬虫组</span><span class="s7">&gt;&gt;</span><span class="s14b">［{{obj.name}}］日志</span>{% endblock -%}
+
+
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="15%" align="center">操作描述</th>
+      <th width="6%" align="center">操作人</th>
+      <th width="8%" align="center">操作时间</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="9" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+
+      <td align="center">{{ q.ld }}</td>
+      <td align="center">{{ q.op }}</td>
+      <td align="center">{{ q.ts }}</td>
+
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="9" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+<script>
+  $(document).ready(function() {
+    $("#search").hide()
+});
+</script>
+{% endblock -%}

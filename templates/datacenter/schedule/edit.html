@@ -1,0 +1,258 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script  type="text/javascript" src="/script/jquery.min.js"></script>
+<script type="text/javascript" src="/script/jquery.validate.js"></script>
+<script type="text/javascript" src="/script/layer/layer.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#tr_source_id").hide();
+	$("#tr_source_table").hide();
+	$("#tr_source_table_where").hide();
+	$("#tr_file").hide();
+	$("#tr_run_type").hide();
+	$("#tr_spider_groupid").hide();
+	$("#tr_spider").hide();
+		$("#source_type").change(function () {
+			$("#tr_file").hide();
+			var tp = $(this).val();
+			if(tp==""||tp=="excel"){
+				$("#tr_source_id").hide();
+				$("#tr_source_table").hide();
+				$("#tr_source_table_where").hide();
+				$("#tr_run_type").hide();
+				if(tp=="excel"){
+					$("#tr_file").show();
+				}
+			}else if(tp=="spider"){
+				$("#tr_spider_groupid").show();
+				$("#tr_spider").show();
+				$("#tr_source_id").hide();
+				$("#tr_source_table").hide();
+				$("#tr_source_table_where").hide();
+				$("#tr_file").hide();
+				$("#tr_run_type").show();
+			}else {
+				$("#tr_run_type").show();
+				$("#tr_source_id").show();
+				$("#tr_spider_groupid").hide();
+				$("#tr_spider").hide();
+				if(tp=="api"){
+					$("#tr_source_table").hide();
+					$("#tr_source_table_where").hide();
+				}else{
+					$("#tr_source_table").show();
+					$("#tr_source_table_where").show();
+
+				}
+					$.get("/datacenter/api/getds", {"tp": $(this).val()}, function (data) {
+						var source_id = $('#source_id');//部门id ：id_parent
+						source_id.empty();
+						source_id.append('<option value="">请选择数据源</option>');
+						$.each(data, function (id, option) {
+							html = '<option value="' + option.id + '"';
+							if (option.id == $('#olddepart').val()) {
+								html += ' selected';
+							}
+							html += '>' + option.name + '</option>';
+							source_id.append(html);
+						});
+						$("#source_id").val("{{Query.source_id}}");
+						$("#source_id").trigger("change");
+					}, "json");
+				}
+
+		});
+
+		$("#source_id").change(
+				function () {
+					$.get("/datacenter/api/getdst", {"dsid": $(this).val()}, function (data) {
+						var source_table = $('#source_table');//部门id ：id_parent
+						source_table.empty();
+						source_table.append('<option value="">请选择数据表</option>');
+						$.each(data, function (id, option) {
+							html = '<option value="' + option + '"';
+							if (option == $('#olddepart').val()) {
+								html += ' selected';
+							}
+							html += '>' + option + '</option>';
+							source_table.append(html);
+						});
+						$("#source_table").val("{{Query.source_table}}");
+					});
+				}
+		)
+
+		$("#spider_groupid").change(
+				function () {
+					$.get("/datacenter/api/getspider", {"gid": $(this).val()}, function (data) {
+						var table=$("#table_spider");
+						table.find('tr').remove();
+						$.each(data, function (id, option) {
+							var tr=$("<tr></tr>");
+							tr.appendTo(table);
+							var hidden1 = "<input type='hidden' name='url_"+option.id +"' id='url_"+option.id+"'>"
+							var hidden2 = "<input type='hidden' name='param_"+option.id +"' id='param_"+option.id+"'>"
+							var td=$("<td  align='left'><input name='spider' id='spider_"+option.id+"' type='checkbox' value='"+option.id+"'>"+option.name+hidden1+hidden2+"</td>");
+		   					td.appendTo(tr);
+		   					var td=$("<td  align='right'><a href='#' onclick='editSpider(\""+option.id+"\")'><img src='/images/menu-i9.gif'></a></td>");
+		   					td.appendTo(tr);
+						});
+                        {% for q in Query.spider_list %}
+                            $("#spider_{{q.id}}").attr("checked","true");
+					        $("#url_{{q.id}}").val("{{q.url}}");
+					        $("#param_{{q.id}}").val("{{q.param}}");
+                        {% endfor %}
+					});
+				}
+		)
+
+	$("#source_type").val("{{Query.source_type}}");
+	$("#source_type").trigger("change");
+	$("#dest_tablename").val("{{Query.dest_tablename}}");
+	$("#run_hour").val("{{Query.run_hour}}");
+	$("#spider_groupid").val("{{Query.spider_groupid}}");
+	$("#spider_groupid").trigger("change");
+
+
+
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		name: {required:true},
+		source_type: {required:true},
+		dest_tablename: {required:true},
+	},
+	messages: {
+        name:     "请填写任务名称！",
+        source_type:   "请选择数据源类型！",
+        dest_tablename:   "请选择入湖数据表！",
+	}
+}
+
+function editSpider(id) {
+	var url = $("#url_" + id).val();
+	var param = $("#param_" + id).val();
+	layer.open({
+        type: 2
+        , offset: 'c'
+        , title: '爬虫设置'
+        , area: ['500px', '300px']
+        , content: "/datacenter/schedule/spiderset?id="+id +"&param="+param +"&url="+url
+        , anim: 1
+        , id: 'spiderset_panel'
+        , shade: [0.8, '#393D49']  /*,shade: 0 //不显示遮罩*/
+        , shadeClose: true
+    });
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">任务</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block FORM_ENCTYPE -%} enctype="multipart/form-data"{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+
+  <tr height="20">
+	<td width="120" align="right" class="blue">任务名称：</td>
+	 <td><span class="x">*</span> <input type="text" name="name" value="{{Query.name}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">数据源类型 ：</td>
+	<td><span class="x">*</span>
+	  <select name="source_type" id="source_type">
+		  <option value="">请选择数据源类型</option>
+		  <option value="api">API</option>
+		  <option value="mysql">MySQL</option>
+		  <option value="oracle">ORACLE</option>
+		  <option value="excel">EXCEL文件</option>
+		  <option value="spider">爬虫</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+<tr height="20" id="tr_source_id">
+	<td align="right" class="blue">数据源 ：</td>
+	<td><span class="x">*</span>
+	  <select name="source_id" id="source_id">
+		  <option value="">请选择数据源</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_source_table">
+	<td align="right" class="blue">数据表 ：</td>
+	<td><span class="x">*</span>
+	  <select id="source_table" name="source_table">
+		  <option value="">请选择数据表</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_source_table_where">
+	<td align="right" class="blue">查询条件 ：</td>
+	<td><span class="x">*</span>
+	  <input id="where" name="where" value="{{Query.where}}">
+	<span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_spider_groupid">
+	<td align="right" class="blue"> 爬虫组：</td>
+	<td><span class="x">*</span>
+		<select id="spider_groupid" name="spider_groupid">
+		  <option value="">请选择爬虫组</option>
+			{%for group in spidergroup%}
+			<option value="{{group.id}}">{{group.name}}</option>
+			{%endfor%}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_spider">
+	<td align="right" class="blue"> 爬虫：</td>
+	<td>
+		<table width="300px" border="0" id="table_spider">
+		</table>
+	  <span class="err"></span></td>
+  </tr>
+
+
+<tr height="20">
+	<td align="right" class="blue">更新方式 ：</td>
+	<td>
+	  <input type="radio" name="update_type" id="update_type0" value="0"{% if Query.update_type!=1 %} checked{%endif%}/><label for="update_type0">全量</label>
+	  <input type="radio" name="update_type" id="update_type1" value="1"{% if Query.update_type==1 %} checked{%endif%}/><label for="update_type1">增量</label>
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_run_type">
+	<td align="right" class="blue">执行方式 ：</td>
+	<td>
+	  <input type="radio" name="run_type" id="run_type0" value="1"{% if Query.run_type==1 %} checked{%endif%}/><label for="run_type0">手动</label>
+	  <input type="radio" name="run_type" id="run_type1" value="2"{% if Query.run_type==2 %} checked{%endif%}/><label for="run_type1">自动</label>
+		每天<select name="run_hour" id="run_hour">
+		<option value="">请选择</option>
+		{% for hh in hour_list %}
+		<option value="{{ hh }}">{{hh}}</option>
+		{% endfor %}
+		</select>时
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_file">
+	<td align="right" class="blue">导入文件 ：</td>
+	<td><span class="x">*</span>
+		<input type="file" id="file1" name="file1">
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20" id="tr_dest_table">
+	<td align="right" class="blue">入湖数据表 ：</td>
+	<td><span class="x">*</span>
+	  <select id="dest_tablename" name="dest_tablename">
+		  <option value="">请选择入湖数据表</option>
+		  {% for q in tquerys %}
+		  <option value="{{q.tablename}}">{{q.name}}</option>
+		  {% endfor %}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+
+</table>
+{% endblock -%}

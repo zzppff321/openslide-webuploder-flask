@@ -1,0 +1,35 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">数据源管理</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+{% endblock -%}
+{% block BODY_OPERA -%}
+	<option value="{/----}add">新建数据源</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="20%" align="center">平台</th>
+      <th width="20%" align="center">授权链接</th>
+    </tr>
+    <tr height="20">
+        <td align="center">抖音</td>
+        <td align="center"><a target="_blank" href="{{ list.douyin }}">点击跳转</a></td>
+    </tr>
+  <tr height="20">
+        <td align="center">快手</td>
+      <td align="center"><a target="_blank" href="{{ list.kuaishou }}">点击跳转</a></td>
+    </tr>
+  </table>
+{% endblock -%}

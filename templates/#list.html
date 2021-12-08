@@ -1,0 +1,38 @@
+{% include '#meta.html' %}
+<script type="text/javascript" src="/script/searchChange.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	pageInit();
+	$('#search').search('.select-auto');
+	$('tr').hover(
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#f5fbfe"});}},
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#fff"});}}
+	);
+	$("#button").hover(function() {this.className = 'btnover';}, function() {this.className = 'btn';});
+});
+</script>
+{% block HERDER_CODE -%}{% endblock -%}
+</head>
+<body>
+<div class="nei">
+  <div class="path"><img src="/images/ico-home.gif" width="16" height="15" />&nbsp;{% block HERDER_ROUTE -%}{% endblock -%}</div>
+  <br/>
+  <form id="search" action="" method="get" class="bg-yellow">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="tabletitle">
+        <td width="100%">搜索&nbsp;{% block BODY_SEARCH -%}{% endblock -%}
+          <input name="button" type="submit" class="btn" id="button" value=" 搜索 "/>
+		</td>
+		<td><select class="input opera-line">
+            <option value="">可以执行...</option>
+			{% block BODY_OPERA -%}{% endblock -%}
+          </select>
+		</td>
+      </tr>
+    </table>
+  </form>
+  <br/>
+  {% block BODY_TABLE -%}{% endblock -%}
+</div>
+</body>
+</html>

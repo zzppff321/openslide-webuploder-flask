@@ -1,0 +1,60 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">数据管理</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  名称/表名包含&nbsp;
+  <input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" size="16">
+  &nbsp;的数据表
+{% endblock -%}
+{% block BODY_OPERA -%}
+	<option value="{/----}edit">新建数据表</option>
+	<option value="{/----}cdpstatcity">观星盘地区统计</option>
+	<option value="{/----}cdpstatindu">观星盘行业统计</option>
+	<option value="{/----}cdpstatcheck">观星盘数据监查</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="10%" align="center">操作</th>
+      <th width="15%" align="center">ID</th>
+      <th width="8%" align="center">名称</th>
+      <th width="8%" align="center">表名</th>
+      <th width="8%" align="center">数据源</th>
+      <th width="8%" align="center">添加时间</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="6" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{/----}info?id={{ q.id }}">查询数据</option>
+          <option value="{/2099}delete?id={{ q.id }}">删除</option>
+        </select>
+	  </td>
+      <td align="center">{{ q.id }}</td>
+      <td align="center">{{ q.name }}</td>
+      <td align="center">{{ q.tablename }}</td>
+      <td align="center">{{ q.source }}</td>
+      <td align="center">{{ q.addtime|dateformat('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="6" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+{% endblock -%}

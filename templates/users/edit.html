@@ -1,0 +1,129 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		realname: {required:true},
+		uuid: {required:true},
+		location: {required:true},
+		level: {required:true},
+		mobile: {required:true}
+	},
+	messages: {
+		realname:"姓名不能为空，且字符不得过长！",
+		uuid:	 "请输入正确的身份证号码！",
+		location:"请选择员工工作所在地区！",
+		level:	 "请选择员工主管等级！",
+		mobile:  "手机号码不能为空，且为标准11位数字！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}系统设置<span class="s7">&gt;&gt;</span>业务账户<span class="s7">&gt;&gt;</span><span class="red s14b">编辑资料</span><span class="s7">&gt;&gt;</span><span class="s14b">{{ Q.realname }}</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">适用于所有的<span>账户</span>资料编辑</div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">真实姓名 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Q.id}}" />
+	  <input type="text" name="realname" value="{{Q.realname}}" size="30" readonly="readonly" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">身份证号码 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="uuid" value="{{Q.uuid}}" size="30" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">所在地区 ：</td>
+	<td><span class="x">*</span>
+	  <select name="location" id="location">
+		<option value="">选择地区...</option>
+		{% for q in Location -%}
+		<option value="{{q.id}}"{{Q.location |selected(q.id)}}>{{q.depict}}</option>
+		{% endfor -%}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">企业微信 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="wxid" value="{{Q.wxid}}" size="30" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">主管等级 ：</td>
+	<td><span class="x">*</span>
+	  <select name="level" id="level">
+		<option value="">选择等级...</option>
+		<option value="0"{{Q.level |selected(0)}}>普通员工</option>
+		<option value="1"{{Q.level |selected(1)}}>专项主管</option>
+		<option value="2"{{Q.level |selected(2)}}>部门经理</option>
+		<option value="3"{{Q.level |selected(3)}}>部门总监</option>
+		<option value="4"{{Q.level |selected(4)}}>体系主管</option>
+		<option value="5"{{Q.level |selected(5)}}>总责任人</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">汇报关系 ：</td>
+	<td><span class="x"> </span>
+	  <select name="leader1" id="leader1">
+		<option value="">选择专项主管...</option>
+		{% for q in Leader -%}
+		{% if q.level in (1,2,3,4,5,-1) %}<option value="{{q.id}}"{{Q.leader1 |selected(q.id)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <select name="leader2" id="leader2">
+		<option value="">选择部门经理...</option>
+		{% for q in Leader -%}
+		{% if q.level in (2,3,4,5,-1) %}<option value="{{q.id}}"{{Q.leader2 |selected(q.id)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <select name="leader3" id="leader3">
+		<option value="">选择部门总监...</option>
+		{% for q in Leader -%}
+		{% if q.level in (3,4,5,-1) %}<option value="{{q.id}}"{{Q.leader3 |selected(q.id)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <select name="leader4" id="leader4">
+		<option value="">选择体系主管...</option>
+		{% for q in Leader -%}
+		{% if q.level in (4,5,-1) %}<option value="{{q.id}}"{{Q.leader4 |selected(q.id)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <select name="leader5" id="leader5">
+		<option value="">选择总责任人...</option>
+		{% for q in Leader -%}
+		{% if q.level in (5,-1) %}<option value="{{q.id}}"{{Q.leader5 |selected(q.id)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">邮箱 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="mailbox" value="{{Q.mailbox}}" size="30" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">手机号码 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="mobile" value="{{Q.mobile}}" size="30" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">性别 ：</td>
+	<td><span class="x"> </span>
+	  <input type="radio" name="gender" id="gender_1" value="1"{{Q.gender |selected(1," checked")}} /> <label for="gender_1">先生（男）</label>
+	  <input type="radio" name="gender" id="gender_2" value="2"{{Q.gender |selected(2," checked")}} /> <label for="gender_2">女士（女）</label>
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

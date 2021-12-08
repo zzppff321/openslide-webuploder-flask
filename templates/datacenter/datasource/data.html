@@ -1,0 +1,69 @@
+{% include '#meta.html' %}
+<link type="text/css" rel="stylesheet" href="/script/gridmanager/gm.css"/>
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+<script type="text/javascript" src="/script/searchChange.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    pageInit();
+	$('#search').search('.select-auto');
+	$('tr').hover(
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#f5fbfe"});}},
+		function() {if(this.className != 'tabletitle'){$(this).css({"background":"#fff"});}}
+	);
+	$("#button").hover(function() {this.className = 'btnover';}, function() {this.className = 'btn';});
+	$("#previu").click(function() {history.back();});
+});
+</script>
+
+</head>
+<body>
+  <div class="nei">
+    <div class="path"><img src="/images/ico-home.gif" width="16" height="15" />&nbsp;营销数据<span class="s7">&gt;&gt;</span><span><a href="/datacenter/datasource">数据源管理</a></span><span class="s7">&gt;&gt;</span><span class="red s14b">数据源预览{{ tbname }}</span></div>
+    <br/>
+    <table class="table" cellspacing="1" cellpadding="0" width="100%">
+      <tr class="tabletitle">
+        {% if cols %}
+        {% for col in cols %}
+        <th width="10%" align="center">{{col[0]}}</th>
+        {% endfor %}
+        {% else %}
+        <th width="15%" align="center">表名</th>
+        <th width="10%" align="center">操作</th>
+        {% endif %}
+      </tr>
+      {% if not query -%}
+      <tr>
+        {% if cols %}
+        <td colspan="{{ cols|length }}" align="center">无数据</td>
+        {% else %}
+        <td colspan="2" align="center">无数据</td>
+        {% endif %}
+      </tr>
+      {% else -%}
+      {% for q in query -%}
+      <tr height="20">
+        {% if cols %}
+        {% for col in cols %}
+        <th width="10%" align="center">{{ q[loop.index0] }}</th>
+        {% endfor %}
+        {% else %}
+        <td align="center">{{ q.0 }}</td>
+        <td align="center"><a href="/datacenter/datasource/data?id={{ id }}&tbname={{ q.0 }}">预览</a></td>
+        {% endif %}
+      </tr>
+      {% endfor -%}
+      {% endif -%}
+    </table>
+    <input type="button" class="btn" id="previu" value=" 返回上一页 " />
+  </div>
+</body>
+</html>

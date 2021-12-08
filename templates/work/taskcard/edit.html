@@ -1,0 +1,69 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		title: {required:true},
+		maker: {required:true},
+		sponsor: {required:true}
+	},
+	messages: {
+		title: "标题不能为空，且字符不得过长！",
+		maker: "请选择执行人！",
+		sponsor: "请填写发起人！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}工作总台<span class="s7">&gt;&gt;</span>任务派发<span class="s7">&gt;&gt;</span><span class="red s14b">编辑</span><span class="s7">&gt;&gt;</span><span class="s14b">{{ Q.title }}</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">适用于所有的<span>任务记录</span>编辑</div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">派发给 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="maker_wx" value="{{Q.maker_wx}}" />
+	  <input type="text" name="maker" value="{{Q.maker}}" size="15" />
+	  <span class="err">请输入员工真实姓名。下一个版本会开发拼音等模糊搜索选定员工的功能，见谅！</span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">需求概述 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="title" value="{{Q.title}}" size="50" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">需求描述 ：</td>
+	<td><span class="x"> </span>
+	  <textarea name="brief" cols="50" rows="5">{{ Q.brief }}</textarea>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">通知谁？ ：</td>
+	<td><span class="x"> </span>
+	  <select name="leader1" id="leader1">
+		<option value="">选择通知给...</option>
+		{% for q in Leader -%}
+		{% if q.level in (1,2,3,4,5,-1) %}<option value="{{q.id}}"{{Q.leader1 |selected(q.realname)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <select name="leader2" id="leader2">
+		<option value="">选择通知给...</option>
+		{% for q in Leader -%}
+		{% if q.level in (2,3,4,5,-1) %}<option value="{{q.id}}"{{Q.leader2 |selected(q.realname)}}>{{q.realname}}</option>{% endif %}
+		{% endfor -%}
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">发起人 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="sponsor" value="{{Q.sponsor}}" size="15" />
+	  <span class="err">是提出需求的人，用于通知执行人遇到问题时向谁来咨询</span></td>
+  </tr>
+</table>
+{% endblock -%}

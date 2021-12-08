@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>盘古云资源与应用管理 v0.1.12</title>
+<link href="/script/ui1007.css" rel="stylesheet" type="text/css" />
+<link href="/script/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript" src="/script/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/script/ui1007.js"></script>
+<script type="text/javascript" src="/script/jquery.alerts.js"></script>
+<script type="text/javascript">
+var opentag = function() { alert('数据准备中...'); };
+var selectDo = function() { alert('数据准备中...'); };
+$(document).ready(function() {
+	resetInterfaceSize();
+	//快捷方式打开标签
+	$('.help').click(function() { 
+		var self = $(this);
+		var ic = self.parent().css('background-image');
+		parent.opentag($(this), {
+			text:self.text(),
+			link:self.attr('href'),
+			desc:'',
+			said:'13001',
+			icon: '/images/light.gif',//ic.replace('url("', '').replace('")', ''),
+			refs:false
+		});
+		return false;
+	});	
+	//
+	var tag = new TAGObject('.tags', '$101');
+	/* 标签页的打开 */
+	opentag = function(obj, options) {
+		tag.open(obj, options);
+		return false;
+	};
+	
+	$(window).resize(function() {
+		resetInterfaceSize();
+	});
+	
+	$('#outer-bar').select({
+		'http://support.baidu.com/':'百度推广学习平台',
+		'http://e.baidu.com/':'百度推广资料库',
+		'http://dbd.baidu.com/':'大百度交流平台',
+		'https://cloud.baidu.com/product/bcd/search.html':'域名查询'
+	}, function(obj) { return; });
+	
+	$('#pangu-bar').select({
+		'http://www.panguweb.cn/':'盘古网络集团',
+		'http://www.pangu.mobi/':'盘古技术服务',
+		'http://cloud.panguweb.cn/':'盘古云应用',
+		'http://blog.pangu.mobi/':'盘古研发Blog'
+	}, function(obj) { return; });
+	
+	$('#user-edit').select({
+		'/security':'账户安全',
+		'/profile':'个人信息'
+	}, function(self, obj) {
+		opentag(obj, {
+			text:obj.text(),
+			link:obj.attr('href'),
+			desc:'',
+			said:obj.attr('id'),
+			icon:'',
+			refs:false
+		});
+		return false;
+	});
+	//获取操作菜单
+	$('.menu').menu('$101', opentag);
+
+	if($.browser.msie && $.browser.version=='6.0'){
+		document.execCommand("BackgroundImageCache", false, true);
+	};
+});
+</script>
+</head>
+
+<body scroll="no">
+<div class="header">
+  <div class="logo">
+  	  <img src="/images/logo.png" alt="盘古网络" width="160" height="47" />
+  </div>
+  <div class="user">
+    <div class="user-operat">
+      <span><a href="/entry?out">退出</a></span>
+      <span class="plus-select" id="user-edit"><a href="#" class="select">修改资料</a><div class="option"></div></span>
+      <span class="plus-select" id="outer-bar"><a href="#" class="select">站外工具</a><div class="option"></div></span>
+      <span class="plus-select" id="pangu-bar"><a href="#" class="select">盘古网站</a><div class="option"></div></span>
+    </div>
+  </div>
+</div>
+<div class="linbar">
+  <div class="time">资源与应用管理</div>
+  <div class="tags"></div>
+  <div class="linbar-bbg"></div>
+</div>
+<div class="main">
+  <div class="left">
+    <div class="user">
+      <div class="user-face"><img src="{{Mine.face}}" width="38" height="38" /></div>
+      <div class="user-desc">
+        <div class="fR1P5-1">欢迎您：<span class="fR1P5-2">{{Mine.realname}}</span></div>
+        <div id="line-time" title="本月还有0天结束"><img src="/images/line-1.gif" width="90%" height="9" /></div>
+      </div>
+      <div style="clear:both;"><!--  --></div>
+    </div>
+    <div class="left-line"></div>
+    <div class="menu"></div>
+  </div>
+  <div class="lbar"></div>
+  <div class="content"></div>
+</div>
+<div style="clear:both;"></div>
+</body>
+</html>

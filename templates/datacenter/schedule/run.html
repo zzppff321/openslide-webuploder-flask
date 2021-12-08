@@ -1,0 +1,47 @@
+{% include '#meta.html' %}
+<script type="text/javascript" src="/script/jquery.validate.js"></script>
+{% block HERDER_CODE -%}{% endblock -%}
+<script type="text/javascript">
+$.validator.setDefaults({submitHandler:function(form){form.submit();}});
+$(document).ready(function() {
+	$("#submit, #previu").hover(function() {this.className = 'btnover';}, function() {this.className = 'btn';});
+	$("#previu").click(function() {
+            location.href = "/datacenter/schedule";
+        }
+	    );
+	//表单验证
+	$("#edit").validate(Validata);
+});
+</script>
+</head>
+<body>
+<div class="nei">
+  <div class="path"><img src="/images/ico-home.gif" width="16" height="15" />&nbsp;{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">任务管理</span><span class="s7">&gt;&gt;</span><span class="s14b">执行</span>{% endblock -%}
+</div>
+	{% block BODY_FORM_BEFOR -%}{% endblock -%}
+  <form name="edit" id="edit" method="post" action=""{% block FORM_ENCTYPE -%}{% endblock -%}>
+	  <div class="view-title">
+      <div class="view-title-left"><img src="/images/ico-logo-line.gif" alt="" width="2" height="12" /> 正在 {{brief}}</div>
+      <div class="view-title-right"></div>
+    </div>
+    <div class="view-J"></div>
+    <div>
+		<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+<tr height="20" id="tr_file">
+	<td align="right" class="blue" style="width: 100px">任务状态 ：</td>
+	<td>
+        执行中
+    </td>
+  </tr>
+</table>
+    </div>
+    <br/>
+    <div class="opera">
+      <input type="button" class="btn" id="previu" value=" 返回上一页 " />
+    </div>
+  </form>
+	{% block BODY_FORM_AFTER -%}{% endblock -%}
+</div>
+</body>
+</html>
+

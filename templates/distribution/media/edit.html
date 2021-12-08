@@ -1,0 +1,117 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+    <script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/script/echarts.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+        Validata = {
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().find('.err'));
+            },
+            success: function (label) {
+                label.text('　').addClass("success");
+            },
+            rules: {
+                gid: {required: true},
+                name: {required: true},
+                passwd: {required: true},
+            },
+            messages: {
+                tel: "请填写账号（电话号码）！",
+
+            }
+        }
+    </script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">媒体号数据</span>
+    <span class="s7">&gt;&gt;</span><span class="s14b">查看</span>{% endblock -%}
+{% block BODY_FORM -%}
+    <table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC"
+           class="table_editor">
+        <input type="hidden" name="id" value="{{ query.id }}"/>
+        <tr height="20">
+            <td width="120" align="right" class="blue">openid:</td>
+            <td>{{ query.openid }}</td>
+        </tr>
+        <tr height="20">
+            <td width="120" align="right" class="blue">平台类型:</td>
+            <td>{% if query.type == '1' %}抖音{% else %}快手{% endif %}</td>
+        </tr>
+        <tr height="20">
+            <td width="120" align="right" class="blue">账号来源:</td>
+            <td>{% if query.from_type == '1' %}平台授权{% else %}客户资源{% endif %}</td>
+        </tr>
+        <tr height="20">
+            <td width="120" align="right" class="blue">粉丝总计:</td>
+            <td>{{ query.total_fans }}</td>
+        </tr>
+        <tr height="20">
+            <td width="120" align="right" class="blue">视频总计:</td>
+            <td>{{ query.total_issue }}</td>
+        </tr>
+
+
+    </table>
+
+    {% if query.type == '1' %}
+    <div id="container" style="height: 450px" class="dataTables_wrapper form-inline" >
+    <script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    option = {
+        title: {
+            text: '15日趋势统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [
+                {% for i in date %}
+                    "{{ i }}",
+                {% endfor %}
+            ],
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {% for i in data %}
+            {
+                name:'{{ i.name }}',
+                type:'{{ i.type }}',
+                stack: '总量',
+                data:[
+                    {% for item in i.data %}
+                        '{{ item }}',
+                    {% endfor %}
+                ]
+            },
+            {% endfor %}
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+</script>
+    {% endif %}
+{% endblock -%}

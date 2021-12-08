@@ -1,0 +1,66 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		gid: {required:true},
+		name: {required:true},
+		passwd: {required:true},
+	},
+	messages: {
+        gid:     "您没有选择爬虫组！",
+        name:      "请填写爬虫用户名！",
+        url:   "请填写爬虫URL！",
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">爬虫</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+	<tr height="20">
+		<td width="120" align="right" class="blue">爬虫组：</td>
+		<td><span class="x">*</span><input type="hidden" name="id" value="{{Query.id}}" />
+		  <select id="gid" name="gid">
+			  <option value="">请选择爬虫组</option>
+			  {% for g in groups %}}
+			  <option value="{{g.id}}"{% if g.id==Query.gid %} selected{% endif %}>{{g.name}}</option>
+			  {% endfor %}}
+		  </select>
+		  <span class="err"></span>
+		</td>
+	</tr>
+  <tr height="20">
+	<td width="120" align="right" class="blue">爬虫名称：</td>
+	 <td><span class="x">*</span> <input type="text" name="name" value="{{Query.name}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">爬虫URL ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="url" value="{{Query.url}}" />
+	  <span class="err"></span></td>
+  </tr>
+	<tr height="20">
+	<td align="right" class="blue">工作状态 ：</td>
+	<td>
+	  <input type="radio" name="worked" id="worked0" value="0"{% if Query.worked!=1 %} checked{%endif%}/><label for="worked0">空闲中</label>
+	  <input type="radio" name="worked" id="worked1" value="1"{% if Query.worked==1 %} checked{%endif%}/><label for="worked1">工作中</label>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">描述 ：</td>
+	<td>
+	  <input type="text" name="desc" value="{{Query.desc}}" size="50"/>
+	  <span class="err"></span></td>
+  </tr>
+
+</table>
+{% endblock -%}

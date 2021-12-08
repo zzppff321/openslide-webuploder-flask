@@ -1,0 +1,53 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">观星盘数据</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  行业包含&nbsp;
+  <input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" size="16">
+  &nbsp;的数据源
+{% endblock -%}
+{% block BODY_OPERA -%}
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="8%" align="center">一级行业</th>
+      <th width="8%" align="center">二级行业</th>
+      <th width="8%" align="center">省份</th>
+      <th width="6%" align="center">城市</th>
+      <th width="8%" align="center">日期</th>
+      <th width="8%" align="center">来源</th>
+      <th width="8%" align="center">检索量</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="11" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center">{{ q.first_name }}</td>
+      <td align="center">{{ q.second_name }}</td>
+      <td align="center">{{ q.province }}</td>
+      <td align="center">{{ q.city }}</td>
+      <td align="center">{{ q.date }}</td>
+      <td align="center">{{ q.source }}</td>
+      <td align="center">{{ q.trend }}</td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="11" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+{% endblock -%}

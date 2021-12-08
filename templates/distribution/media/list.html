@@ -1,0 +1,75 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+    <style>
+        .preview {
+            width: 150px;
+            height: 30px;
+            display: block;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border: solid 1px #000;
+        }
+    </style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">数据源管理</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+    昵称包含
+    <input name="nickname" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();"
+           value="{{ so.tel }}" size="16">
+    &nbsp;的数据源
+    <select name="type">
+    <option value="0">媒体类型</option>
+    <option value="1">抖音</option>
+    <option value="2">快手</option>
+    </select>
+    <select name="from_type">
+    <option value="0">来源</option>
+    <option value="2">客户授权</option>
+    <option value="1">平台授权</option>
+    </select>
+{% endblock -%}
+{% block BODY_OPERA -%}
+    <option value="{/----}add">新建数据源</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+    <table class="table" cellspacing="1" cellpadding="0" width="100%">
+        <tr class="tabletitle">
+            <th width="10%" align="center">nickname</th>
+            <th width="10%" align="center">媒体类型</th>
+            <th width="20%" align="center">来源</th>
+            <th width="10%" align="center">账号</th>
+            <th width="10%" align="center">授权时间</th>
+            <th width="10%" align="center">视频总数</th>
+            <th width="10%" align="center">30日内视频总数</th>
+            <th width="10%" align="center">粉丝总数</th>
+            <th width="10%" align="center">操作</th>
+        </tr>
+        {% if not query.data -%}
+            <tr>
+                <td colspan="11" align="center">无数据</td>
+            </tr>
+        {% else -%}
+            {% for q in query.data -%}
+                <tr height="20">
+                    <td align="center">{{ q.nickname }}</td>
+                    <td align="center">{% if q.type == '1' %}抖音{% else %}快手{% endif %}</td>
+                    <td align="center">{% if q.from_type == '1' %}平台授权{% else %}客户资源{% endif %}</td>
+                    {% set userid = q.parent_id %}
+                    <td align="center">{{ userList[userid] }}</td>
+                    <td align="center">{{ q.addtime|dateformat('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td align="center"><a href="/distribution/publishsource?openid={{ q.openid }}&userid={{ q.parent_id }}">{{ q.sourceCount }}</a></td>
+                    <td align="center">{{ q.total_issue }}</td>
+                    <td align="center">{{ q.total_fans }}</td>
+                    <td align="center"><select class="input opera-line">
+                        <option value="">选择...</option>
+                        <option value="{/----}edit?id={{ q.oid }}">查看</option>
+                        <option value="{/----}delete?id={{ q.oid }}">解除授权</option>
+                    </select>
+                    </td>
+                </tr>{% endfor -%}
+        {% endif -%}
+        <tr height="20">
+            <td colspan="11" align="center">{{ query.bar|safe }}</td>
+        </tr>
+    </table>
+{% endblock -%}

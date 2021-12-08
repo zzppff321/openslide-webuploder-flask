@@ -1,0 +1,106 @@
+{% extends '#list.html' %}
+{% block HERDER_ROUTE -%}系统设置<span class="s7">&gt;&gt;</span><span class="s14b">业务账户</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  <select id="kt" name="kt">
+	<option value="1"{% if so.kt == '1' %} selected{% endif %}>姓名</option>
+	<option value="2"{% if so.kt == '2' %} selected{% endif %}>企信ID</option>
+  </select>
+  &nbsp;中包含&nbsp;
+  <input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" onBlur="def_jihe.keyword = encodeURI(this.value);" size="16">
+  &nbsp;的&nbsp;
+  <select id="wxid" name="wxid" class="select-auto">
+	<option value="">所有性质</option>
+	{#<option value="0"{% if so.wxid == '0' %} selected{% endif %}>平台会员</option>#}
+	<option value="1"{% if so.wxid == '1' %} selected{% endif %}>员工账号</option>
+	<option value="2"{% if so.wxid == '2' %} selected{% endif %}>企业员工</option>
+  </select>
+  &nbsp;且&nbsp;
+  <select id="status" name="status" class="select-auto">
+	<option value="">所有状态</option>
+	<option value="405"{% if so.status == '405' %} selected{% endif %}>　待审　</option>
+	<option value="200"{% if so.status == '200' %} selected{% endif %}>　正常　</option>
+	<option value="403"{% if so.status == '403' %} selected{% endif %}>　冻结　</option>
+	<option value="0"{% if so.status == '0' %} selected{% endif %}>　删除　</option>
+  </select>
+  账户
+{% endblock -%}
+{% block BODY_OPERA -%}
+	<option value="{03000}update-address-book">更新企信账户</option>
+	<option value="{0----}edit">添加新账户</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="10%" align="center">操作</th>
+      <th width="9%" align="center">姓名</th>
+      <th width="10%" align="center">企业微信</th>
+      <th width="8%" align="center">主管等级</th>
+      <th width="15%" align="center">汇报关系</th>
+      <th width="10%" align="center">工作地点</th>
+      <th width="10%" align="center">手机号</th>
+      <th width="6%" align="center">性别</th>
+      <th width="7%" align="center">状态</th>
+      <th width="15%" align="center">ID</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="10" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{0----}edit?id={{ q.id }}">编辑资料</option>
+          <option value="{0----}right?id={{ q.id }}">权限管理</option>
+          <option value="{02000}lock?id={{ q.id }}">{% if q.status == 0 -%}解除冻结{% else -%}冻结账户{% endif -%}</option>
+          <option value="{0----}auth?id={{ q.id }}">扫码授权</option>
+        </select>
+	  </td>
+      <td align="center"><a href="" target="_blank">{{ q.realname }}</a></td>
+      <td align="center">{{ q.wxid }}</td>
+      <td align="center">{{ q.level }}</td>
+      <td align="center">
+		<select>
+		  {% if not q.leader1 == '' %}<option>专项：{{Index.get(q.leader1, '（无）')}}</option>{% endif %}
+		  {% if not q.leader2 == '' %}<option>部门：{{Index.get(q.leader2, '（无）')}}</option>{% endif %}
+		  {% if not q.leader3 == '' %}<option>总监：{{Index.get(q.leader3, '（无）')}}</option>{% endif %}
+		  {% if not q.leader4 == '' %}<option>体系：{{Index.get(q.leader4, '（无）')}}</option>{% endif %}
+		  {% if not q.leader5 == '' %}<option>集团：{{Index.get(q.leader5, '（无）')}}</option>{% endif %}
+		</select>
+	  </td>
+      <td align="center">{{ Index.get(q.location, '---') }}</td>
+      <td align="center">{{ q.mobile }}</td>
+      <td align="center">{{ q.gender |gender }}</td>
+      <td align="center">{{ q.status }}</td>
+      <td align="center">{{ q.id }}</td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="10" align="center">{{ query.bar|safe }}</td>
+    </tr>
+    <tr class="tabletitle">
+      <td colspan="10">以下账户未设置汇报关系，可编辑资料进行认领</td>
+    </tr>
+	{% for q in users -%}
+    <tr height="20">
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{0----}edit?id={{ q.id }}">编辑资料</option>
+          <option value="{0----}right?id={{ q.id }}">权限管理</option>
+          <option value="{02000}lock?id={{ q.id }}">{% if q.status == 0 -%}解除冻结{% else -%}冻结账户{% endif -%}</option>
+          <option value="{0----}auth?id={{ q.id }}">扫码授权</option>
+        </select>
+	  </td>
+      <td align="center"><a href="" target="_blank">{{ q.realname }}</a></td>
+      <td align="center">{{ q.wxid }}</td>
+      <td align="center">{{ q.level }}</td>
+      <td align="center">未设置</td>
+      <td align="center">{{ Index.get(q.location, '---') }}</td>
+      <td align="center">{{ q.mobile }}</td>
+      <td align="center">{{ q.gender |gender }}</td>
+      <td align="center">{{ q.status }}</td>
+      <td align="center">{{ q.id }}</td>
+    </tr>{% endfor -%}
+  </table>
+{% endblock -%}

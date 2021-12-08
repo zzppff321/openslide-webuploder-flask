@@ -1,0 +1,109 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/script/echarts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		gid: {required:true},
+		name: {required:true},
+		passwd: {required:true},
+	},
+	messages: {
+        tel:     "请填写账号（电话号码）！",
+
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">账号</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <input type="hidden" name="id" value="{{query.id}}" />
+	<tr height="20">
+	<td width="120" align="right" class="blue">播放</td>
+	<td>{{ query.statistics.play_count }}</td>
+    </tr>
+    <tr height="20">
+	<td width="120" align="right" class="blue">点赞</td>
+	<td>{{ query.statistics.digg_count }}</td>
+    </tr>
+    <tr height="20">
+	<td width="120" align="right" class="blue">分享</td>
+	<td>{{ query.statistics.share_count }}</td>
+    </tr>
+    <tr height="20">
+	<td width="120" align="right" class="blue">下载</td>
+	<td>{{ query.statistics.download_count }}</td>
+    </tr>
+    <tr height="20">
+	<td width="120" align="right" class="blue">转发</td>
+	<td>{{ query.statistics.forward_count }}</td>
+    </tr>
+
+</table>
+
+
+    <div id="container" style="height: 450px" class="dataTables_wrapper form-inline" >
+    <script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    option = {
+        title: {
+            text: '30日趋势统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [
+                {% for i in date %}
+                    "{{ i }}",
+                {% endfor %}
+            ],
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {% for i in data %}
+            {
+                name:'{{ i.name }}',
+                type:'{{ i.type }}',
+                stack: '总量',
+                data:[
+                    {% for item in i.data %}
+                        '{{ item }}',
+                    {% endfor %}
+                ]
+            },
+            {% endfor %}
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+</script>
+{% endblock -%}

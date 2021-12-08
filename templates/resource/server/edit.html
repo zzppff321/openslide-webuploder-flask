@@ -1,0 +1,125 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript" src="/script/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_report').upload1(); //文件上传，预览模式
+	var editorElement = CKEDITOR.replace('detail_editor'); //编辑器
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		ipaddr: {required:true},
+		brief: {required:true},
+		plat: {required:true},
+		env: {required:true},
+		passwd: {required:true},
+		port: {required:true},
+		sa: {required:true},
+		hardware: {required:true}
+	},
+	messages: {
+        ipaddr:   "必须填写一个IP地址！",
+        brief:    "请描述服务器的用途！",
+        plat:     "您没有选择服务器放置地点！",
+        env:      "您没有选择服务器的操作系统！",
+        passwd:   "请填写服务器的root或超级管理密码！",
+        port:     "请填写服务器远程连接管理的端口！",
+        sa:       "请填写服务器的管理员姓名！",
+        hardware: "请填写服务器配置！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">服务器</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑</span>{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">IP地址（公网） ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Query.id}}" />
+	  <input type="text" name="ipaddr" value="{{Query.ipaddr}}" />
+	  如服务器没有公网地址，请填写内网IP地址
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">IP地址（内网） ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="lanip" value="{{Query.lanip}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">操作系统和用途/摘要 ：</td>
+	<td><span class="x">*</span>
+	  <select name="env" id="env">
+		<option value="">选择操作系统...</option>
+		<option value="CentOS"{{Query.env |selected("CentOS")}}>CentOS</option>
+		<option value="Windows"{{Query.env |selected("Windows")}}>Windows</option>
+		<option value="Unix"{{Query.env |selected("Unix")}}>Unix</option>
+		<option value="Linux"{{Query.env |selected("Linux")}}>Linux</option>
+		<option value="其他"{{Query.env |selected("其他")}}>其他</option>
+	  </select>
+	  <input type="text" name="brief" value="{{Query.brief}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">放置地点 ：</td>
+	<td><span class="x">*</span>
+	  <select name="plat" id="plat">
+		<option value="">选择位置...</option>
+		<option value="沈联通"{{Query.plat |selected("沈联通")}}>沈联通</option>
+		<option value="百度云"{{Query.plat |selected("百度云")}}>百度云</option>
+		<option value="阿里云"{{Query.plat |selected("阿里云")}}>阿里云</option>
+		<option value="腾讯云"{{Query.plat |selected("腾讯云")}}>腾讯云</option>
+		<option value="华为云"{{Query.plat |selected("华为云")}}>华为云</option>
+		<option value="石家庄机房"{{Query.plat |selected("石家庄机房")}}>石家庄机房</option>
+		<option value="沈阳机房"{{Query.plat |selected("沈阳机房")}}>沈阳机房</option>
+		<option value="长春机房"{{Query.plat |selected("长春机房")}}>长春机房</option>
+		<option value="二级公司"{{Query.plat |selected("二级公司")}}>二级公司</option>
+	  </select>
+	  <input type="checkbox" name="vir" value="1"{{Query.vir |checked(1)}} /> 虚拟化服务器
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">超管密码 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="passwd" value="{{Query.passwd}}" />
+	  必须是root或Administrator级别的管理密码，也可以是证书密钥内容
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">远程端口 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="port" value="{{Query.port}}" />
+	  例：ssh:22；terminal:3389
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">管理员姓名 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="sa" value="{{Query.sa}}" />
+	  即：服务器的责任人
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">设备维护端口 ：</td>
+	<td><span class="x"> </span>
+	  <input type="text" name="idrac" value="{{Query.idrac}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">服务器配置 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="hardware" value="{{Query.hardware}}" size="70" />
+	  <br>例：品牌及型号[服务编码]，CPU/内存/硬盘/显卡/RAID卡/电源/其他配件说明
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">备注 ：</td>
+	<td><span class="x"> </span>
+	  <textarea name="remark" rows="3" cols="50">{{Query.remark}}</textarea>
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

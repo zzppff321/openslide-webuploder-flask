@@ -1,0 +1,81 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:100px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">素材资源</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  <select id="kt" name="kt">
+	<option value="1"{{so.kt |selected("1")}}>编号</option>
+	<option value="2"{{so.kt |selected("2")}}>标签</option>
+  </select>
+  &nbsp;中包含&nbsp;
+  <input name="kw" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.kw }}" onBlur="def_jihe.keyword = encodeURI(this.value);" size="16">
+  &nbsp;的&nbsp;
+  <select id="used" name="used" class="select-auto">
+	<option value="">使用情况</option>
+	<option value="0"{{so.used |selected("0")}}>未被使用</option>
+	<option value="1"{{so.used |selected("1")}}>正在使用</option>
+  </select>
+  &nbsp;且&nbsp;
+  <select id="status" name="status" class="select-auto">
+	<option value="">所有状态</option>
+	<option value="200"{{so.status |selected("200")}}>　正常　</option>
+	<option value="403"{{so.status |selected("403")}}>禁止使用</option>
+  </select>
+  资源
+{% endblock -%}
+{% block BODY_OPERA -%}
+	<option value="{/----}edit">发布新资源</option>
+	<option value="{/----}import">从文件导入</option>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="10%" align="center">操作</th>
+      <th width="12%" align="center">编号</th>
+      <th width="10%" align="center">类别</th>
+      <th width="8%" align="center">颜色</th>
+      <th width="12%" align="center">预览</th>
+      <th width="20%" align="center">标签</th>
+      <th width="8%" align="center">发布人</th>
+      <th width="10%" align="center">发布时间</th>
+      <th width="10%" align="center">状态</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="9" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{/----}edit?id={{ q.id }}">编辑</option>
+          <option value="{/2099}delete?id={{ q.id }}">删除</option>
+          <option value="{/----}down?id={{ q.id }}">下载</option>
+        </select>
+	  </td>
+      <td align="center">{{ q.sn }}</td>
+      <td align="center">{{ q.category }}</td>
+      <td align="center">{{ ','.join(q.color) }}</td>
+      <td align="center"><a href="/s/{{ q.preview }}" style="background-image:url(/s/{{ q.preview }});" target="_blank" class="preview"></a></td>
+      <td align="left">{{ q.label |label(3) }}</td>
+      <td align="center">{{ q.adder |realname }}</td>
+      <td align="center">{{ q.addtime |dateformat('%Y-%m-%d %H:%M') }}</td>
+      <td align="center">{{ q.status }}</td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="9" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+{% endblock -%}

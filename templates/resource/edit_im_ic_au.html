@@ -1,0 +1,160 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#load_preview').upload2(); //文件上传，预览模式
+	$('#load_package').upload1(); //文件上传，预览模式
+	$('#auto_sn').change(function() {
+		checked = $(this).is(":checked");
+		sn__box = $("input[name='sn']");
+		if(checked) {
+			$(this).val(sn__box.val());
+			sn__box.val('#AUTO');
+			sn__box.css({"background":"#eee", "color":"#aaa"});
+			sn__box.attr("readonly",true);
+		} else {
+			sn__box.val($(this).val());
+			sn__box.val('');
+			sn__box.css({"background":"#fff", "color":"#000"});
+			sn__box.attr("readonly",false);
+		}
+	});
+});
+Validata = {
+	errorElement: "span",
+	errorPlacement: function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success: function(label) {label.text('　').addClass("success");},
+	rules: {
+		sn: {required:true},
+		category: {required:true},
+		preview: {required:true},
+		package: {required:true},
+		color: {required:true},
+		creator: {required:true}
+	},
+	messages: {
+		sn: 	 "需要为素材设置一个编号！",
+		category:"您没有选择素材的类别！",
+		preview: "您没有上传预览图片！",
+		package: "您没有上传资源的源码包！",
+		shape:   "您没有选择素材的表现种类！",
+		color: 	 "需要至少选择一个素材色彩！",
+		creator: "您没有注名作者（或来源）！"
+	}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}资源管理<span class="s7">&gt;&gt;</span><span class="red s14b">素材资源</span><span class="s7">&gt;&gt;</span><span class="s14b">编辑（发布）资源</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">图片、图标、音效、视频特效等<span>素材</span>资源发布和编辑</div>
+<div id="helper_play"></div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">编号 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Resource.id}}" />
+	  <input type="text" name="sn" value="{{Resource.sn}}"{% if not Resource.sn == '' -%} readonly="readonly"{% endif -%} />
+	  <input type="checkbox" id="auto_sn"{% if not Resource.sn == '' -%} disabled="disabled"{% endif -%} /> 自动生成编号
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">类别 ：</td>
+	<td><span class="x">*</span>
+	  <select name="category" id="category">
+		<option value="">选择类别...</option>
+		<optgroup label="图像素材">
+		  <option value="图片"{{Resource.category |selected("图片")}}>图片</option>
+		  <option value="图标"{{Resource.category |selected("图标")}}>图标</option>
+		  <option value="背景"{{Resource.category |selected("背景")}}>背景</option>
+		  <option value="动画"{{Resource.category |selected("动画")}}>动画</option>
+		</optgroup>
+		<optgroup label="视频素材">
+		  <option value="特效"{{Resource.category |selected("特效")}}>特效</option>
+		  <option value="片段"{{Resource.category |selected("片段")}}>片段</option>
+		  <option value="转场"{{Resource.category |selected("转场")}}>转场</option>
+		</optgroup>
+		<optgroup label="声音素材">
+		  <option value="音乐"{{Resource.category |selected("音乐")}}>音乐</option>
+		  <option value="旁白"{{Resource.category |selected("旁白")}}>旁白</option>
+		  <option value="音效"{{Resource.category |selected("音效")}}>音效</option>
+		</optgroup>
+		<optgroup label="其他">
+		  <option value="其他"{{Resource.category |selected("其他")}}>其他</option>
+		</optgroup>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">预览图片 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="preview" value="{{Resource.preview}}" size="50" id="load_preview" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">源码包 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="package" value="{{Resource.package}}" size="50" id="load_package" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">表现种类 ：</td>
+	<td><span class="x">*</span>
+	  <input type="checkbox" name="shape" value="人物"{{Resource.shape |checked("人物")}} /> 人物
+	  <input type="checkbox" name="shape" value="动物"{{Resource.shape |checked("动物")}} /> 动物
+	  <input type="checkbox" name="shape" value="植物"{{Resource.shape |checked("植物")}} /> 植物
+	  <input type="checkbox" name="shape" value="物品"{{Resource.shape |checked("物品")}} /> 物品
+	  <br>                               
+	  <input type="checkbox" name="shape" value="真实"{{Resource.shape |checked("真实")}} /> 真实
+	  <input type="checkbox" name="shape" value="卡通"{{Resource.shape |checked("卡通")}} /> 卡通
+	  <input type="checkbox" name="shape" value="虚拟"{{Resource.shape |checked("虚拟")}} /> 虚拟
+	  <input type="checkbox" name="shape" value="其他"{{Resource.shape |checked("其他")}} /> 其他
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">风格 ：</td>
+	<td><span class="x"> </span>
+	  <select name="style" id="style">
+		<option value="">选择..</option>
+		<option value="传统"{{Resource.style |selected("传统")}}>传统</option>
+		<option value="古韵"{{Resource.style |selected("古韵")}}>古韵</option>
+		<option value="科技"{{Resource.style |selected("科技")}}>科技</option>
+		<option value="玄幻"{{Resource.style |selected("玄幻")}}>玄幻</option>
+		<option value="另类"{{Resource.style |selected("另类")}}>另类</option>
+		<option value="其他"{{Resource.style |selected("其他")}}>其他</option>
+	  </select>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">色彩 ：</td>
+	<td><span class="x">*</span>
+	  <input type="checkbox" name="color" value="赤"{{Resource.color |checked("赤")}} /> 赤
+	  <input type="checkbox" name="color" value="橙"{{Resource.color |checked("橙")}} /> 橙
+	  <input type="checkbox" name="color" value="黄"{{Resource.color |checked("黄")}} /> 黄
+	  <input type="checkbox" name="color" value="绿"{{Resource.color |checked("绿")}} /> 绿
+	  <input type="checkbox" name="color" value="蓝"{{Resource.color |checked("蓝")}} /> 蓝
+	  <input type="checkbox" name="color" value="青"{{Resource.color |checked("青")}} /> 青
+	  <input type="checkbox" name="color" value="紫"{{Resource.color |checked("紫")}} /> 紫
+	  <input type="checkbox" name="color" value="黑"{{Resource.color |checked("黑")}} /> 黑
+	  <input type="checkbox" name="color" value="白"{{Resource.color |checked("白")}} /> 白
+	  <input type="checkbox" name="color" value="灰"{{Resource.color |checked("灰")}} /> 灰
+	  <br>
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">作者/来源 ：</td>
+	<td><span class="x">*</span>
+	  <input type="text" name="creator" value="{{Resource.creator}}" />
+	  <span class="err"></span></td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">其他设置 ：</td>
+	<td><span class="x"> </span>
+	  <input type="checkbox" name="origin" value="1"{{Resource.origin |selected(1," checked")}} /> 原创作品
+	  <input type="checkbox" name="on3d" value="1"{{Resource.on3d |selected(1," checked")}} /> 3D特效
+	  <input type="checkbox" name="draw" value="1"{{Resource.draw |selected(1," checked")}} /> 手绘创作
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

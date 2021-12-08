@@ -1,0 +1,41 @@
+{% extends '#edit.html' %}
+{% block HERDER_CODE -%}
+<script type="text/javascript">
+Validata = {
+	errorElement:"span",
+	errorPlacement:function(error, element) {error.appendTo( element.parent().find('.err') );},
+	success:function(label) {label.text('　').addClass("success");},
+	rules:{remark:{required:true}},
+	messages:{remark:"请确认删除的说明！"}
+}
+</script>
+{% endblock -%}
+{% block HERDER_ROUTE -%}商品管理<span class="s7">&gt;&gt;</span><span class="red s14b">删除商品</span>{% endblock -%}
+{% block BODY_FORM_BEFOR -%}
+<div class="tips-line tips-930b">删除时会自动处理关联的其他数据，且不可恢复，请谨慎执行！</div>
+{% endblock -%}
+{% block BODY_FORM -%}
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#DCDCDC" class="table_editor">
+  <tr height="20">
+	<td width="120" align="right" class="blue">即将删除的商品 ：</td>
+	<td>
+		名称为【<b>{{Q.brief}}</b>】的
+		由 {{Q.adder}}于{{Q.addtime |dateformat('%Y-%m-%d %H:%M:%S')}}发布的
+		{{Q.categorid |choice('PRODUCT_CATEGORID')}}商品
+	</td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">关联的 产品 数据 ：</td>
+	<td>
+		<div>某某状态 的 某某 什么什么 产品</div>
+		<div>某某状态 的 某某 什么什么 产品</div>
+	</td>
+  </tr>
+  <tr height="20">
+	<td align="right" class="blue">确认并说明 ：</td>
+	<td><span class="x">*</span><input type="hidden" name="id" value="{{Q.id}}" />
+	  <input type="text" name="remark" size="30" value="" />
+	  <span class="err"></span></td>
+  </tr>
+</table>
+{% endblock -%}

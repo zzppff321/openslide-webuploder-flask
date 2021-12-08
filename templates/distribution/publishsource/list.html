@@ -1,0 +1,140 @@
+{% extends '#list.html' %}
+{% block HERDER_CODE -%}
+<style>
+.preview{
+	width:150px;
+	height:30px;
+	display:block;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border:solid 1px #000;
+}
+</style>
+{% endblock -%}
+{% block HERDER_ROUTE -%}营销数据<span class="s7">&gt;&gt;</span><span class="red s14b">内容列表</span>{% endblock -%}
+{% block BODY_SEARCH -%}
+  标题包含
+  <input name="title" type="text" id="kw" class="Input" onFocus="this.select();" onMouseOver="this.focus();" value="{{ so.title }}" size="16">
+    <select name="video_status">
+    <option value="0">全部状态</option>
+    <option value="1">已通过</option>
+    <option value="2">未通过</option>
+    <option value="3">审核中</option>
+    </select>
+    <select name="platform">
+    <option value="all">全部方式</option>
+    <option value="1">自行发布</option>
+    <option value="0">平台发布</option>
+    </select>
+  &nbsp;的数据源
+{% endblock -%}
+{% block BODY_OPERA -%}
+    <option value="{/----}add">新建数据源</option>
+    <input onclick="deleteAll()" value="批量删除" type="button"/>
+{% endblock -%}
+{% block BODY_TABLE -%}
+  <table class="table" cellspacing="1" cellpadding="0" width="100%">
+    <tr class="tabletitle">
+      <th width="5%" align="center">全选<input type="checkbox" onclick="checkAll()" id="Checkbox1"></th>
+      <th width="5%" align="center">视频标题</th>
+      <th width="5%" align="center">封面</th>
+      <th width="5%" align="center">播放</th>
+      <th width="5%" align="center">点赞</th>
+        <th width="5%" align="center">分享</th>
+         <th width="5%" align="center">下载</th>
+      <th width="5%" align="center">转发</th>
+      <th width="5%" align="center">是否自行发布</th>
+      <th width="5%" align="center">状态</th>
+        <th width="5%" align="center">发布时间</th>
+        <th width="5%" align="center">操作</th>
+    </tr>
+    {% if not query.data -%}
+    <tr>
+      <td colspan="11" align="center">无数据</td>
+    </tr>
+    {% else -%}
+	{% for q in query.data -%}
+    <tr height="20">
+      <td align="center"><input type="checkbox" name="c1" value="{{ q.oid }}"></td>
+      <td align="center">{{ q.title }}</td>
+      <td align="center"><img width="40" height="50" src="{{ q.cover }}"></td>
+      <td align="center">{{ q.statistics.play_count }}</td>
+      <td align="center">{{ q.statistics.digg_count }}</td>
+      <td align="center">{{ q.statistics.share_count }}</td>
+     <td align="center">{{ q.statistics.download_count }}</td>
+      <td align="center">{{ q.statistics.forward_count }}</td>
+     <td align="center">
+            {% if q.platform == 1 %}
+                平台发布
+                {% else  %}
+                自行发布
+            {% endif %}
+
+        </td>
+        <td align="center">
+            {% if q.video_status == 1 %}
+            发布成功
+            {% elif q.video_status ==2 %}
+            不适宜播放
+            {% else %}
+            审核中
+            {% endif %}
+
+        </td>
+    <td align="center">{{ q.create_time }}</td>
+      <td align="center"><select class="input opera-line">
+          <option value="">选择...</option>
+          <option value="{/----}edit?id={{ q.oid }}">详情</option>
+        <option value="{/----}delete?id={{ q.oid }}">删除</option>
+        </select>
+	  </td>
+    </tr>{% endfor -%}
+    {% endif -%}
+    <tr height="20">
+      <td colspan="12" align="center">{{ query.bar|safe }}</td>
+    </tr>
+  </table>
+    <script>
+var checkAll = function ()
+
+ {
+//根据名字获取所有checkbox控件
+    var allCheckBoxs = document.getElementsByName("c1");
+
+//半段点击了全选
+    if (document.getElementById("Checkbox1").checked == true) {
+
+//循环让所有全选
+        for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox") {
+                allCheckBoxs[i].checked = true;
+            }
+        }
+    }
+//点击了取消全选
+    else {
+//循环取消全选
+        for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox") {
+                allCheckBoxs[i].checked = false;
+            }
+        }
+    }
+}
+
+var deleteAll = function ()
+{
+    var ids=[];
+    var allCheckBoxs = document.getElementsByName("c1");
+    for (var i = 0; i < allCheckBoxs.length; i++) {
+            if (allCheckBoxs[i].type == "checkbox"&&allCheckBoxs[i].checked == true) {
+                ids.push(allCheckBoxs[i].value)
+            }
+        }
+    if(ids.length > 0){
+        var idsStr=ids.join(',')
+        window.location.href='publishsource/delete?id='+idsStr;
+    }
+}
+</script>
+{% endblock -%}
